@@ -209,7 +209,7 @@ export default props => {
               href={`#${category._id}`}
               onClick={() => setShowFilterDialog(false)}
             >
-              <ListItemText> {category.name}</ListItemText>
+              <ListItemText> {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}</ListItemText>
               <ListItemSecondaryAction>
                 {" "}
                 {category.items.length}

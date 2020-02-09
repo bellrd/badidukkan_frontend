@@ -87,7 +87,7 @@ export default (props) => {
     useEffect(() => {
         Axios.get(`${BASE_URL}/users/orders/`, {headers: {Authorization: ctx.state.accessToken}}).then(
             response => {
-                setOrders(response.data)
+                setOrders(response.data.reverse())
             }
         ).catch(
             error => enqueueSnackbar("Failed to load orders.", {variant: "error", key: "orderkey"})
@@ -109,7 +109,7 @@ export default (props) => {
 
     if (!orders || orders.length === 0) {
         return (
-            <h1> No order found </h1>
+            <h1 style={{align:"center"}}> No order found </h1>
         )
     } else
         return (
@@ -122,13 +122,13 @@ export default (props) => {
                         <Typography variant={"h5"} align={"center"}> <b> Orders </b></Typography>
                     </div>
                     {orders.map((order, index) => (
-                        <Box m={4}>
+                        <Box m={1}>
                         <ExpansionPanel key={order.id} elevation={3}>
 
                             <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
                                 <Grid container spacing={2}>
                                     <Grid item xs={4}>
-                                        <Typography> <b> #{order._id.substr(0, 5)} </b></Typography>
+                                        <Typography> <b> #{order._id.substr(19, 23)} </b></Typography>
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Typography
