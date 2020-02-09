@@ -54,8 +54,10 @@ export default (props) => {
     const ctx = useContext(GlobalContext);
     const [addresses, setAddresses] = useState([]);
     const history = useHistory();
+    // eslint-disable-next-line no-unused-vars
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const classes = useStyles();
+    const from = props.location.from
     useEffect(() => {
         Axios.get(`${BASE_URL}/users/addresses/`, {headers: {Authorization: ctx.state.accessToken}}).then(response => {
             console.log(response)
@@ -90,14 +92,14 @@ export default (props) => {
                                                         to={{
                                                             pathname: "/editAddress",
                                                             address: address,
-                                                            hidden:props.location.hidden
+                                                            from:from
                                                         }}> Edit </Button>
                                             </React.Fragment>
 
                                         }>
                                         </ListItemText>
 
-                                        <ListItemSecondaryAction hidden= {props.location.hidden == null}>
+                                        <ListItemSecondaryAction hidden= {from === "/homePage"}>
                                             <Radio edge={"end"} onChange={() => {
                                                 ctx.dispatch(
                                                     {
@@ -120,13 +122,13 @@ export default (props) => {
                         }
 
                         <Button color={"primary"} className={classes.addNew} onClick={() => {
-                            history.push("/editAddress")
+                            history.push({pathname:"/editAddress", from:from})
                         }}> Add new </Button>
                     </List>
                 </Paper>
             </Container>
             <Fab onClick={() => {
-                history.push("/editAddress")
+                history.push({pathname:"/editAddress", from:from})
             }} color={"primary"} className={classes.addNewFab}>
                 <Add/>
             </Fab>

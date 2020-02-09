@@ -19,6 +19,9 @@ import AddressPage from "./pages/AddressPage";
 import EditAddressPage from "./pages/EditAddressPage";
 import OrderTypePage from "./pages/OrderTypePage";
 import OrderSummaryPage from "./pages/OrderSummaryPage";
+import PayOnlinePage from "./pages/PayOnlinePage";
+import SuccessPage from "./pages/SuccessPage";
+import FailedPage from "./pages/FailedPage";
 import NotFoundPage from "./pages/404Page"
 
 
@@ -45,6 +48,9 @@ const App = (props) => {
                                 <Route path="/editAddress" exact component={EditAddressPage} />
                                 <Route path="/selectOrderType" exact component={OrderTypePage} />
                                 <Route path="/checkout" exact component={OrderSummaryPage} />
+                                <Route path="/payOnline" exact component={PayOnlinePage} />
+                                <Route path={"/success/:action?"} component={SuccessPage} />
+                                <Route path={"/failed/:message?"} component={FailedPage} />
                                 <Route component={NotFoundPage}/>
                             </Switch>
                         </div>

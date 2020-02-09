@@ -11,6 +11,8 @@ import {
     Grid,
     makeStyles,
     MenuItem,
+    Box,
+    Button,
     Paper,
     Select,
     Table,
@@ -103,28 +105,7 @@ export default (props) => {
         })
     }, []);
 
-    const handlePaytmFlow = async (data) => {
-        let {ENDPOINT, ...formdata} = data;
-        const form = new FormData();
-        for (let key of Object.keys(formdata)) {
-            console.log("adding",key,formdata[key])
-            form.append(`${key}`, `${formdata[key]}`)
-        }
-        console.log("form", form);
 
-        Axios({
-            method: "post",
-            url: ENDPOINT,
-            data: form,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(response => {
-                console.log({response})
-            }
-        ).catch(error => {
-            console.log({error})
-        })
-
-    };
     const handleSubmit = () => {
         if (payment_method === null || order === null) {
             enqueueSnackbar("Select payment method", {variant: "info"});
@@ -139,15 +120,13 @@ export default (props) => {
                 response => {
                     enqueueSnackbar("Your Order is placed.", {variant: "success"});
                     ctx.dispatch({type: "ORDER_PLACED"});
-                    setTimeout(() => {
-                        history.replace("/")
-                    }, 2000)
+                    history.replace("/success")
                 }
             ).catch(error => {
                     enqueueSnackbar("Failed to place order.", {variant: "error"});
                     setTimeout(() => {
                         history.replace("/cart")
-                    }, 2000)
+                    }, 1000)
                 }
             )
         } else if (payment_method === 'ONLINE') {
@@ -156,8 +135,7 @@ export default (props) => {
                 payment_method: "ONLINE"
             }, {headers: {Authorization: ctx.state.accessToken}}).then(
                 response => {
-                    console.log("for ppf", response.data);
-                    handlePaytmFlow(response.data)
+                    history.replace({pathname:"/payOnline", payload:response.data})
                 }
             ).catch(error => {
                 enqueueSnackbar("Failed to place order online.", {variant: "error"});
@@ -181,8 +159,13 @@ export default (props) => {
                     <CssBaseline>
                         <Grid container spacing={0} direction={"column"} alignItems={"center"} justify={"center"}
                               style={{minHeight: '100vh'}}>
-                            <Grid item xs={3}>
+                            <Grid item xs={12}>
                                 <CircularProgress variant={"indeterminate"} color={"primary"}/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box m={2}>
+                                    <Button variant={"text"} color={"secondary"} onClick={()=>{history.replace("/cart")}}> Try again </Button>
+                                </Box>
                             </Grid>
                         </Grid>
                     </CssBaseline>
@@ -205,9 +188,9 @@ export default (props) => {
                 </Paper>
 
 
-                <Paper className={classes.payment}>
+                <Paper className={classes.payment} square>
                     <Typography variant={"subtitle1"}> <b> Choose Payment option </b></Typography>
-                    <Select fullWidth variant={"filled"} value={payment} name="payment" onChange={(e) => {
+                    <Select fullWidth variant={"filled"} autofocus value={payment} name="payment" onChange={(e) => {
                         setPayment_method(e.target.value)
                     }}>
                         {
@@ -222,9 +205,9 @@ export default (props) => {
                     <ExpansionPanelSummary expandIcon={
                         <ExpandMore/>
                     }>
-                        <Typography variant={"subtitle1"} className={classes.heading}> <em> Click to view detail </em>
+                        <Typography variant={"subtitle1"} className={classes.heading}> <b> Details </b>
                         </Typography>
-                        <Typography> <b> Total {order.total} </b> </Typography>
+                        <Typography> <b> Total: {order.total} </b> </Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
                         <TableContainer component={Paper} elevation={0} variant={"outlined"}

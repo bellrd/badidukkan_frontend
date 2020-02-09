@@ -49,7 +49,7 @@ export default (props) => {
         setAddress({...address, [e.target.name]: e.target.value});
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (props) => {
         if (!address.pincode.match(/^[\d]{6}$/)) {
             enqueueSnackbar("Pincode Invalid", {variant: "error", key: "erroraddress"});
             return; //required
@@ -68,7 +68,7 @@ export default (props) => {
         if (props.location.address == null) {
             Axios.post(`${BASE_URL}/users/addresses/`, address, {headers: {Authorization: ctx.state.accessToken}}).then(response => {
                     enqueueSnackbar("Address saved");
-                    history.replace({pathname:"/chooseAddress", hidden:props.location.next})
+                    history.replace({pathname:"/chooseAddress", from:props.location.from})
                 }
             ).catch(error => {
                     enqueueSnackbar("Failed to save address.", {variant: "error", key: "erroraddress"})
@@ -77,7 +77,7 @@ export default (props) => {
         } else {
             Axios.put(`${BASE_URL}/users/addresses/${address._id}/`, address, {headers: {Authorization: ctx.state.accessToken}}).then(response => {
                     enqueueSnackbar("Address saved");
-                    history.replace({pathname:"/chooseAddress", hidden:this.location.next})
+                    history.replace({pathname:"/chooseAddress", from:props.location.from})
                 }
             ).catch(error => {
                     enqueueSnackbar("Failed to save address.", {variant: "error", key: "erroraddress"})
@@ -142,7 +142,7 @@ export default (props) => {
                             fullWidth
                             variant="contained"
                             color="primary"
-                            onClick={handleSubmit}
+                            onClick={() => {handleSubmit(props)}}
                         >
                             Save
                         </Button>

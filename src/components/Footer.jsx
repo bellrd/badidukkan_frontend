@@ -1,13 +1,12 @@
 import React from "react"
 import {useHistory} from "react-router-dom";
-import {Link, Typography, CssBaseline, Grid, makeStyles} from "@material-ui/core";
+import {Button, Typography, CssBaseline, Grid, makeStyles} from "@material-ui/core";
 import {Facebook, Instagram, WhatsApp,} from "@material-ui/icons";
-import {Link as dLink} from "react-router-dom"
+import {Link} from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
     root: {
         marginTop: theme.spacing(8),
-        paddingBottom:theme.spacing(2),
         textAlign: "center",
         background: "#24292e",
         color: "#808080",
@@ -53,7 +52,7 @@ export default (props) => {
                         <WhatsApp fontSize={"large"} className={classes.icons}/>
                     </Grid>
                 </Grid>
-                 <Link to={"/"}> Badidukkan.com</Link>
+                <Button component={Link} to="/"> badidukkan.com</Button>
             </div>
         </CssBaseline>
     )

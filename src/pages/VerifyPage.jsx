@@ -102,7 +102,7 @@ export default function VerifyPage(props) {
                 enqueueSnackbar("Success", {variant: "success"});
                 const nextPage = props.location.next || props.next || "/profile/#updatePasword";
                 setTimeout(() => {
-                    history.push("/")
+                    history.replace(nextPage)
                 }, 500)
             }
         ).catch(error => {

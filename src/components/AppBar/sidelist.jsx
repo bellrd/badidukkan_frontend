@@ -64,7 +64,7 @@ export default (props) => {
     } else {
         return <div className={classes.list} role="presentation">
             <Typography variant={"h4"} className={classes.logo}>
-                {props.title}
+                {props.title || "Hi,"}
             </Typography>
 
             <Divider/>
@@ -105,7 +105,7 @@ export default (props) => {
                         <Button component={Link} to={"/logout"} fullWidth={true} size={"small"}
                                 style={{textTransform: "none"}}>
                             <ListItemIcon><ExitToApp/></ListItemIcon>
-                            <ListItemText>logout</ListItemText>
+                            <ListItemText>Logout</ListItemText>
                         </Button>
                     </ListItem>
                 </List>

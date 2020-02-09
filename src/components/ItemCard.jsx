@@ -100,14 +100,14 @@ export default (props) => {
             />
 
 
-            <Dialog open={showOptions} disableBackdropClick fullWidth={true} maxWidth={"sm"}>
+            <Dialog open={showOptions} fullWidth={true} maxWidth={"sm"}>
                 <DialogTitle> Modify Size </DialogTitle>
                 <DialogContent>
                     <List>
                         {item.sizes.map((size, index) => {
                             const itemIndex = ctx.state.cart.findIndex(cartitem => cartitem._id === item._id && cartitem.size === size.name);
                             return <ListItem key={index}>
-                                <ListItemText> {size.name}</ListItemText>
+                                <ListItemText> {size.name} @ <b>{size.price}</b></ListItemText>
                                 <ListItemSecondaryAction>
                                     <ButtonGroup size={"small"} color={"secondary"} variant={"outlined"}>
                                         <IconButton onClick={() => {
@@ -154,7 +154,7 @@ export default (props) => {
                 </DialogContent>
                 <DialogActions>
                     <Button variant={"contained"} color={"primary"}
-                            onClick={() => setShowOptions(false)}> Add </Button>
+                            onClick={() => setShowOptions(false)}> Done </Button>
                 </DialogActions>
 
             </Dialog>

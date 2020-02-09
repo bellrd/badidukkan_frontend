@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, {useContext} from "react";
 import {useHistory} from "react-router-dom"
 import {
@@ -160,10 +161,6 @@ export default (props) => {
 
         return (
             <div>
-                <Box style={{display: "none"}}> {enqueueSnackbar("Click on checkout to buy.", {
-                    variant: "info",
-                    anchorOrigin: {vertical: "top", horizontal: "center"}
-                })} </Box>
                 <Container maxWidth={"sm"}>
                     <CssBaseline/>
                     <div className={classes.main}>

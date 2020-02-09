@@ -5,7 +5,7 @@ import {useSnackbar} from "notistack";
 import {Container, Typography} from "@material-ui/core";
 
 const LogoutPage = () => {
-    const TIME_TO_REDIRECT = 3;
+    const TIME_TO_REDIRECT = 2;
     const ctx = useContext(GlobalContext);
     const [timer, setTimer] = useState(TIME_TO_REDIRECT);
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -20,7 +20,7 @@ const LogoutPage = () => {
 
     return timer ? (
         <Container maxWidth={"sm"} >
-            <Typography variant={"h5"}> Redirecting to HomePage...</Typography>
+            <Typography variant={"h5"} align={"center"}> Redirecting to HomePage...</Typography>
         </Container>
     ) : (
         <Redirect to="/"/>
