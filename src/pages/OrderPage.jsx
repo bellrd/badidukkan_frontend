@@ -128,7 +128,7 @@ export default (props) => {
                             <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
                                 <Grid container spacing={2}>
                                     <Grid item xs={4}>
-                                        <Typography> <b> #{order._id.substr(19, 23)} </b></Typography>
+                                        <Typography> <b> #{order._id.substr(19)} </b></Typography>
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Typography
