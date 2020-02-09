@@ -8,6 +8,7 @@ import {
     CardContent,
     Divider,
     Fab,
+    Grid,
     IconButton,
     List,
     ListSubheader,
@@ -78,19 +79,18 @@ const useStyles = makeStyles(theme => ({
 const CartItem = (props) => {
     const ctx = useContext(GlobalContext);
 
-    const item = props.item;
+    const cart_item = props.cart_item;
     const classes = useStyles();
-    console.log({item});
 
     return (
         <Box className={classes.root}>
             <div className={classes.details}>
                 <CardContent className={classes.content}>
                     <Typography style={{fontWeight: "bolder"}}>
-                        {item.name}
+                        {cart_item.name}
                     </Typography>
                     <Typography variant="subtitle1" color="textSecondary">
-                        {item.size}
+                        {cart_item.size}
                     </Typography>
                 </CardContent>
                 <div className={classes.controls}>
@@ -99,7 +99,7 @@ const CartItem = (props) => {
                         <IconButton onClick={() => {
                             ctx.dispatch({
                                 type: "REMOVE_ONE_ITEM",
-                                payload: {item: {id: item.id}, size: item.size}
+                                payload: {...cart_item}
                             })
 
                         }}>
@@ -107,12 +107,12 @@ const CartItem = (props) => {
                         </IconButton>
 
                         <Button variant={"contained"} color={"primary"}
-                                disableElevation={true}> {item.quantity} </Button>
+                                disableElevation={true}> {cart_item.quantity} </Button>
 
                         <IconButton onClick={() => {
                             ctx.dispatch({
                                 type: "ADD_ONE_ITEM",
-                                payload: {item: item, size: item.size, price: item.price}
+                                payload: {...cart_item}
                             })
 
                         }}><Add/></IconButton>
@@ -121,12 +121,12 @@ const CartItem = (props) => {
             </div>
             <div className={classes.info}>
                 <IconButton size={"small"} onClick={() => {
-                    ctx.dispatch({type: "DELETE_ITEM", payload: {item: item, size: item.size}})
+                    ctx.dispatch({type: "DELETE_ITEM", payload: {...cart_item}})
                 }}>
                     <Delete color={"secondary"}/>
                 </IconButton>
                 <Typography>
-                    {item.price * item.quantity}
+                    {cart_item.price * cart_item.quantity}
                 </Typography>
             </div>
         </Box>
@@ -139,46 +139,75 @@ export default (props) => {
     const history = useHistory();
     const classes = useStyles();
 
-    return (
-        <div>
-            <Box style={{display: "none"}}> {enqueueSnackbar("Click on checkout to buy.", {variant: "info"})} </Box>
-            <Container maxWidth={"sm"}>
-                <CssBaseline/>
-                <div className={classes.main}>
-                    <div className={classes.title}>
-                        <Back fontSize={"large"} onClick={history.goBack}/>
-                        <Typography variant={"h5"} align={"center"}><b> Cart </b> </Typography>
-                    </div>
-                    <Paper elevation={3}>
-                        <List subheader={<ListSubheader disableSticky><b> {ctx.state.cart.length} Items </b>
-                        </ListSubheader>}>
-                            {ctx.state.cart.map(item => (<CartItem key={item.key} item={item}/>))}
-                        </List>
-                    </Paper>
-                </div>
-                <Hidden smDown>
-                    <Fab variant={"extended"} className={classes.checkoutDesktop} color={"primary"}
-                         onClick={
-                             () => {
-                                 history.push({pathname: "/selectOrderType", merchandiseId: " id"})
-                             }
-                         }
-                    >
-                        <Proceed/> <small> Checkout </small>
-                    </Fab>
-                </Hidden>
-                <Hidden mdUp>
-                    <Fab variant={"extended"} className={classes.checkoutMobile} color={"primary"}
-                         onClick={
-                             () => {
-                                 history.push({pathname: "/selectOrderType", merchandiseId: " id"})
-                             }
-                         }>
-                        <Proceed/> <small> Checkout </small>
-                    </Fab>
-                </Hidden>
-            </Container>
+    if (ctx.state.cart.length === 0 || (ctx.state.cart.length && (ctx.state.merchandise_id == null))) {
+        enqueueSnackbar("Empty cart", {variant: "info"});
+        localStorage.removeItem("merchandise_id");
+        return (
+            <div>
+                <Container maxWidth={"sm"}>
+                    <CssBaseline>
+                        <Grid container spacing={0} direction={"column"} alignItems={"center"} justify={"center"}
+                              style={{minHeight: '100vh'}}>
+                            <Grid item xs={3}>
+                                <Typography variant={"h4"}> Empty </Typography>
+                            </Grid>
+                        </Grid>
+                    </CssBaseline>
+                </Container>
+            </div>
+        )
+    } else
 
-        </div>
-    )
+        return (
+            <div>
+                <Box style={{display: "none"}}> {enqueueSnackbar("Click on checkout to buy.", {
+                    variant: "info",
+                    anchorOrigin: {vertical: "top", horizontal: "center"}
+                })} </Box>
+                <Container maxWidth={"sm"}>
+                    <CssBaseline/>
+                    <div className={classes.main}>
+                        <div className={classes.title}>
+                            <Back fontSize={"large"} onClick={history.goBack}/>
+                            <Typography variant={"h5"} align={"center"}><b> Cart </b> </Typography>
+                        </div>
+                        <Paper elevation={3}>
+                            <List subheader={<ListSubheader disableSticky><b> {ctx.state.cart.length} Items </b>
+                            </ListSubheader>}>
+                                {ctx.state.cart.map(cart_item => (
+                                    <CartItem key={cart_item.key} cart_item={cart_item}/>))}
+                            </List>
+                        </Paper>
+                    </div>
+                    <Hidden smDown>
+                        <Fab variant={"extended"} className={classes.checkoutDesktop} color={"primary"}
+                             onClick={
+                                 () => {
+                                     history.push({
+                                         pathname: "/selectOrderType",
+                                         merchandise_id: ctx.state.merchandise_id
+                                     })
+                                 }
+                             }
+                        >
+                            <Proceed/> <small> Checkout </small>
+                        </Fab>
+                    </Hidden>
+                    <Hidden mdUp>
+                        <Fab variant={"extended"} className={classes.checkoutMobile} color={"primary"}
+                             onClick={
+                                 () => {
+                                     history.push({
+                                         pathname: "/selectOrderType",
+                                         merchandise_id: ctx.state.merchandise_id
+                                     })
+                                 }
+                             }>
+                            <Proceed/> <small> Checkout </small>
+                        </Fab>
+                    </Hidden>
+                </Container>
+
+            </div>
+        )
 }

@@ -65,7 +65,9 @@ export default function VerifyPage(props) {
     const history = useHistory();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const classes = useStyles();
-    const [verifyData, setVerifyData] = useState({mobile: "", otp: ""});
+    const [verifyData, setVerifyData] = useState(
+        {mobile: "mobile" in props.location ? props.location.mobile : "", otp: ""}
+    );
     const [mobileFieldError, setMobileFieldError] = useState(false);
     const [otpFieldError, setOtpFieldError] = useState(false);
     const [disableSubmit, setDisableSubmit] = useState(false);
@@ -104,7 +106,9 @@ export default function VerifyPage(props) {
                 }, 500)
             }
         ).catch(error => {
-                enqueueSnackbar("Verification Failed", {variant: "error"})
+                enqueueSnackbar("Verification failed.", {variant: "error"});
+                setDisableSubmit(false);
+                console.log({error})
             }
         )
     };

@@ -13,7 +13,7 @@ import {
     Typography,
 } from "@material-ui/core";
 import {KeyboardBackspaceRounded as Back} from "@material-ui/icons"
-import {useHistory} from "react-router-dom"
+import {useHistory, Redirect} from "react-router-dom"
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
@@ -50,20 +50,11 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const demoProfile = {
-    mobile:"6393457611",
-    full_name: "Neetu yadav",
-    email: "iamsmartgirl@gmail.com",
-    dob: "13/01/1999",
-    notification: true,
-    invoiceUpdate: false,
-};
-
 
 export default (props) => {
 
     const ctx = useContext(GlobalContext);
-    const [profile, setProfile] = useState(demoProfile);
+    const [profile, setProfile] = useState({});
     const [showPassword, toggleShowPassword] = useState(false);
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
@@ -73,20 +64,13 @@ export default (props) => {
 
     useEffect(() => {
         Axios.get(`${BASE_URL}/users/profile/`, {headers: {Authorization: ctx.state.accessToken}}).then(
-            response => setProfile(response.data)
+            response => {
+                setProfile(response.data);
+            }
         ).catch(error => {
             enqueueSnackbar("Failed to load Profile", {variant: "error"})
         });
-        return () => {
-            Axios.put(`${BASE_URL}/users/profile/`, profile, {headers: {Authorization: ctx.state.accessToken}}).then(
-                response => {
-                    enqueueSnackbar("Profile Saved", {variant: "success"})
-                }
-            ).catch(error => {
-                    enqueueSnackbar("Failed to update Profile", {variant: "error"})
-                }
-            )
-        }
+
     }, []);
 
     const handleInput = e => {
@@ -121,117 +105,132 @@ export default (props) => {
             });
     };
 
+    const updateProfile = () => {
+        Axios.put(`${BASE_URL}/users/profile/`, {...profile}, {headers: {Authorization: ctx.state.accessToken}}).then(
+            response => {
+                console.log({profile});
+                enqueueSnackbar("Profile Saved", {variant: "success"})
+            }
+        ).catch(error => {
+                enqueueSnackbar("Failed to update Profile", {variant: "error"})
+            }
+        )
+    };
+    if (!ctx.state.accessToken) {
+        return <Redirect to={{pathname: "/login", next: "/profile"}}/>
+    } else
 
-    return (
-        <div>
-            <Container maxWidth={"sm"}>
-                <CssBaseline/>
 
-                <div className={classes.main}>
-                    <div className={classes.title}>
-                        <Back fontSize={"large"} onClick={history.goBack}/>
-                        <Typography variant={"h5"} align={"center"}> <b> Profile </b></Typography>
-                    </div>
+        return (
+            <div>
+                <Container maxWidth={"sm"}>
+                    <CssBaseline/>
 
-                    <Paper className={classes.info} elevation={3}>
-                        <List subheader={<ListSubheader disableSticky> {profile.full_name}</ListSubheader>}>
-                            <ListItem>
-                                <ListItemText> Email: </ListItemText>
-                                <ListItemSecondaryAction onClick={() => {
-                                    const newEmail = prompt("Enter Email");
-                                    enqueueSnackbar("Email Added", {variant: "success"});
-                                    setProfile({...profile, email: newEmail})
-                                }}>
-                                    {profile.email || "example@somthing.com"}
-                                </ListItemSecondaryAction>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText> Dob </ListItemText>
-                                <ListItemSecondaryAction onClick={() => {
-                                    enqueueSnackbar("Working on it.", {variant: "info"})
-                                }}>
-                                    {profile.dob || "Not provided."}
+                    <div className={classes.main}>
+                        <div className={classes.title}>
+                            <Back fontSize={"large"} onClick={history.goBack}/>
+                            <Typography variant={"h5"} align={"center"} onClick={updateProfile}>
+                                <b> Save </b></Typography>
+                        </div>
 
-                                </ListItemSecondaryAction>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText> Notification </ListItemText>
-                                <ListItemSecondaryAction>
-                                    <Switch checked={profile.notification} onChange={() => {
-                                        setProfile({...profile, notification: !profile.notification})
-                                    }}/>
-                                </ListItemSecondaryAction>
-                            </ListItem>
+                        <Paper className={classes.info} elevation={3}>
+                            <List subheader={<ListSubheader disableSticky> {profile.full_name}</ListSubheader>}>
+                                <ListItem>
+                                    <ListItemText> Email: </ListItemText>
+                                    <ListItemSecondaryAction onClick={() => {
+                                        const newEmail = prompt("Enter Email");
+                                        enqueueSnackbar("Email Added", {variant: "success"});
+                                        setProfile({...profile, email: newEmail})
+                                    }}>
+                                        {profile.email || "Not available."}
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText> Dob </ListItemText>
+                                    <ListItemSecondaryAction onClick={() => {
+                                        enqueueSnackbar("Working on it.", {variant: "info"})
+                                    }}>
+                                        {profile.dob || "Not provided."}
 
-                            <ListItem>
-                                <ListItemText> Email Invoice </ListItemText>
-                                <ListItemSecondaryAction>
-                                    {profile.email ? (
-
-                                        <Switch checked={profile.invoiceUpdate} onChange={() => {
-                                            setProfile({...profile, invoiceUpdate: !profile.invoiceUpdate})
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText> Notification </ListItemText>
+                                    <ListItemSecondaryAction>
+                                        <Switch checked={profile.notification} onChange={() => {
+                                            setProfile({...profile, notification: !profile.notification})
                                         }}/>
-                                    ) : "Add email"}
-                                </ListItemSecondaryAction>
-                            </ListItem>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
 
-                        </List>
-                    </Paper>
+                                <ListItem>
+                                    <ListItemText> Email Invoice </ListItemText>
+                                    <ListItemSecondaryAction>
+                                        {profile.email ? (
 
-                    <section id="updatePassword">
-                        <Paper elevation={3} className={classes.update}>
-                            <form noValidate className={classes.form}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="password1"
-                                    label="New Password"
-                                    name="password1"
-                                    type={showPassword ? "text" : "password"}
-                                    autoComplete="current-password"
-                                    autoFocus
-                                    onChange={handleInput}
-                                    InputProps={{
-                                        endAdornment: (
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={() => {
-                                                    toggleShowPassword(!showPassword)
-                                                }}
-                                            >
-                                                {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                            </IconButton>
-                                        )
-                                    }}
-                                />
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password2"
-                                    label="Confirm"
-                                    type={"password"}
-                                    id="password2"
-                                    onChange={handleInput}
-                                />
-                                <Button classes={classes.submit}
-                                        fullWidth
-                                        variant="contained"
-                                        color="secondary"
-                                        disabled={password2 !== password1}
-                                        className={classes.submit}
-                                        onClick={handleSubmit}
-                                >
-                                    Update Password
-                                </Button>
-                            </form>
+                                            <Switch checked={profile.invoiceUpdate} onChange={() => {
+                                                setProfile({...profile, invoiceUpdate: !profile.invoiceUpdate})
+                                            }}/>
+                                        ) : "Add email"}
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+
+                            </List>
                         </Paper>
-                    </section>
-                </div>
-            </Container>
-        </div>
-    );
+
+                        <section id="updatePassword">
+                            <Paper elevation={3} className={classes.update}>
+                                <form noValidate className={classes.form}>
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        id="password1"
+                                        label="New Password"
+                                        name="password1"
+                                        type={showPassword ? "text" : "password"}
+                                        autoComplete="current-password"
+                                        onChange={handleInput}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => {
+                                                        toggleShowPassword(!showPassword)
+                                                    }}
+                                                >
+                                                    {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                                </IconButton>
+                                            )
+                                        }}
+                                    />
+                                    <TextField
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        name="password2"
+                                        label="Confirm"
+                                        type={"password"}
+                                        id="password2"
+                                        onChange={handleInput}
+                                    />
+                                    <Button classes={classes.submit}
+                                            fullWidth
+                                            variant="contained"
+                                            color="secondary"
+                                            disabled={password2 !== password1}
+                                            className={classes.submit}
+                                            onClick={handleSubmit}
+                                    >
+                                        Update Password
+                                    </Button>
+                                </form>
+                            </Paper>
+                        </section>
+                    </div>
+                </Container>
+            </div>
+        );
 }
 
 

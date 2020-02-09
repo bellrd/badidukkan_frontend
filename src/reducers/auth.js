@@ -12,5 +12,6 @@ export const login = (state, data) => {
 export const logout = (state, data) => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("profile")
-    return { ...state, token: null };
+    localStorage.removeItem("cart")
+    return { ...state, accessToken: null };
 };

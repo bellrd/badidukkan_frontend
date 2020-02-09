@@ -1,5 +1,5 @@
 import {Button, Divider, List, ListItem, ListItemIcon, ListItemText, makeStyles, Typography} from "@material-ui/core";
-import {ContactSupport, Create, Help, History, Lock, Person, ShoppingCart, VpnKey} from "@material-ui/icons";
+import {ContactSupport, Create, Help, ExitToApp, History, Lock, Person, ShoppingCart, VpnKey} from "@material-ui/icons";
 import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 import {GlobalContext} from "../../GlobalContext";
@@ -23,7 +23,7 @@ export default (props) => {
     if (props.accessToken === null || props.accessToken === "") {
         return <div className={classes.list} role="presentation">
             <Typography variant={"h4"} className={classes.logo}>
-                {props.title}
+                Hi,
             </Typography>
             <List>
                 <Button component={Link} to={"/login"} fullWidth={true} size={"small"}
@@ -102,10 +102,10 @@ export default (props) => {
                         </ListItem>
                     </Button>
                     <ListItem>
-                        <Button component={Link} to={"/help"} fullWidth={true} size={"small"}
+                        <Button component={Link} to={"/logout"} fullWidth={true} size={"small"}
                                 style={{textTransform: "none"}}>
-                            <ListItemIcon><Help/></ListItemIcon>
-                            <ListItemText>Contact us</ListItemText>
+                            <ListItemIcon><ExitToApp/></ListItemIcon>
+                            <ListItemText>logout</ListItemText>
                         </Button>
                     </ListItem>
                 </List>

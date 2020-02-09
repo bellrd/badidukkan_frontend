@@ -52,6 +52,8 @@ export default (props) => {
     const classes = useStyles();
 
     const item = props.item;
+    const category_id = props.category_id;
+    const merchandise_id = props.merchandise_id;
 
     return (
         <Card className={classes.card} elevation={2} square>
@@ -76,7 +78,7 @@ export default (props) => {
                         <Button variant={"contained"} color={"primary"}
                                 disableElevation={true}>  {
                             ctx.state.cart.filter(
-                                temp => temp.id === item.id)
+                                temp => temp._id === item._id)
                                 .reduce(
                                     (a, b) => (
                                         {quantity: a.quantity + b.quantity}
@@ -103,13 +105,23 @@ export default (props) => {
                 <DialogContent>
                     <List>
                         {item.sizes.map((size, index) => {
-                            const itemIndex = ctx.state.cart.findIndex(cartitem => cartitem.id === item.id && cartitem.size === size.name);
+                            const itemIndex = ctx.state.cart.findIndex(cartitem => cartitem._id === item._id && cartitem.size === size.name);
                             return <ListItem key={index}>
                                 <ListItemText> {size.name}</ListItemText>
                                 <ListItemSecondaryAction>
                                     <ButtonGroup size={"small"} color={"secondary"} variant={"outlined"}>
                                         <IconButton onClick={() => {
-                                            ctx.dispatch({type: "REMOVE_ONE_ITEM", payload: {item:{id:item.id}, size: size.name}})
+                                            ctx.dispatch({
+                                                type: "REMOVE_ONE_ITEM",
+                                                payload: {
+                                                    _id: item._id,
+                                                    name: item.name,
+                                                    size: size.name,
+                                                    category_id: category_id,
+                                                    price: size.price,
+                                                    merchandise_id: merchandise_id
+                                                }
+                                            })
                                         }}>
                                             <Remove/>
                                         </IconButton>
@@ -122,7 +134,14 @@ export default (props) => {
                                         <IconButton onClick={() => {
                                             ctx.dispatch({
                                                 type: "ADD_ONE_ITEM",
-                                                payload: {item: item, size: size.name, price: size.price}
+                                                payload: {
+                                                    _id: item._id,
+                                                    name: item.name,
+                                                    size: size.name,
+                                                    price: size.price,
+                                                    category_id: category_id,
+                                                    merchandise_id: merchandise_id,
+                                                }
                                             })
                                         }}>
                                             <Add/>
@@ -135,7 +154,7 @@ export default (props) => {
                 </DialogContent>
                 <DialogActions>
                     <Button variant={"contained"} color={"primary"}
-                            onClick={() => setShowOptions(false)}> Close </Button>
+                            onClick={() => setShowOptions(false)}> Add </Button>
                 </DialogActions>
 
             </Dialog>

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Link, useHistory} from "react-router-dom"
+import {Link, useHistory, Redirect} from "react-router-dom"
 import {
     Button,
     Container,
@@ -44,47 +44,29 @@ const useStyles = makeStyles(theme => ({
         bottom: theme.spacing(4),
         right: theme.spacing(4)
     }
-
 }));
 
-const demoAddresses = [
-    {
-        pincode: "233222",
-        landmark: "Near Vodafone Tower",
-        detail: "Jagadish Pur Autar, Kasimabad"
-    },
-    {
-        pincode: "233222",
-        landmark: "Near Vodafone Tower",
-        detail: "Jagadish Pur Autar, Kasimabad"
-    },
-    {
-        pincode: "233222",
-        landmark: "Near Vodafone Tower",
-        detail: "Jagadish Pur Autar, Kasimabad"
-    },
-    {
-        pincode: "233222",
-        landmark: "Near Vodafone Tower",
-        detail: "Jagadish Pur Autar, Kasimabad"
-    },
-];
+
 
 
 export default (props) => {
 
     const ctx = useContext(GlobalContext);
-    const [addresses, setAddresses] = useState(demoAddresses);
+    const [addresses, setAddresses] = useState([]);
     const history = useHistory();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const classes = useStyles();
     useEffect(() => {
         Axios.get(`${BASE_URL}/users/addresses/`, {headers: {Authorization: ctx.state.accessToken}}).then(response => {
+            console.log(response)
             setAddresses(response.data)
         }).catch(error => {
             enqueueSnackbar("Unable to retrieve address.", {variant: "error"})
         })
     }, []);
+    if(!ctx.state.accessToken){
+       return <Redirect to={{pathname:"/login", next:"/chooseAddress"}} />
+    }else
     return (
         <React.Fragment>
             <Container maxWidth={"sm"} className={classes.root}>
@@ -107,14 +89,15 @@ export default (props) => {
                                                         color={"secondary"}
                                                         to={{
                                                             pathname: "/editAddress",
-                                                            address: address
+                                                            address: address,
+                                                            hidden:props.location.hidden
                                                         }}> Edit </Button>
                                             </React.Fragment>
 
                                         }>
                                         </ListItemText>
 
-                                        <ListItemSecondaryAction hidden= {props.location.next === "/"}>
+                                        <ListItemSecondaryAction hidden= {props.location.hidden == null}>
                                             <Radio edge={"end"} onChange={() => {
                                                 ctx.dispatch(
                                                     {
@@ -122,9 +105,9 @@ export default (props) => {
                                                         payload: address
                                                     });
                                                 if (props.location.next === "/") {
-                                                    history.goBack()
+                                                    history.replace("/")
                                                 } else {
-                                                    history.push("/checkout")
+                                                    history.replace("/checkout")
                                                 }
                                             }
                                             }/>
@@ -143,7 +126,7 @@ export default (props) => {
                 </Paper>
             </Container>
             <Fab onClick={() => {
-                history.push("/editAddres")
+                history.push("/editAddress")
             }} color={"primary"} className={classes.addNewFab}>
                 <Add/>
             </Fab>

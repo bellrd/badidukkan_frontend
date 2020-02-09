@@ -99,7 +99,7 @@ export default (props) => {
         } else {
             setFirstNameFieldError(false);
         }
-        if (!registerData.mobile_number.match(/^[6-9]{1}[\d]{9}$/)) {
+        if (!registerData.mobile.match(/^[6-9][\d]{9}$/)) {
             setMobileFieldError(true);
             return; //required
         } else {
@@ -121,7 +121,8 @@ export default (props) => {
                 setStep(2);
             })
             .catch((error) => {
-                enqueueSnackbar(error.data.message, {variant: "error"});
+                enqueueSnackbar("Registration failed. ", {variant: "error"});
+                console.log({error})
                 setDisableSubmit(false);
             });
     };
@@ -180,7 +181,7 @@ export default (props) => {
                                     fullWidth
                                     id="mobile"
                                     label="Mobile Number"
-                                    name="mobile_number"
+                                    name="mobile"
                                     autoComplete="mobile"
                                     onChange={handleInput}
                                 />
@@ -251,7 +252,7 @@ export default (props) => {
             <Redirect
                 to={{
                     pathname: "/verify",
-                    mobile: registerData.mobile_number,
+                    mobile: registerData.mobile,
                     next:"/"
                 }}
             ></Redirect>

@@ -17,13 +17,12 @@ import {
 } from "@material-ui/core";
 import AppBar from "../components/AppBar"
 import {GlobalContext} from "../GlobalContext";
-import CategoryList from "../components/CategoryList";
 import Footer from "../components/Footer";
-import {data} from "./demoCategoryList"
 import {Link, useHistory} from "react-router-dom"
 import {BASE_URL} from "../constant";
 import Axios from "axios";
 import {useSnackbar} from "notistack";
+import ItemCard from "../components/ItemCard";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -58,8 +57,19 @@ const useStyles = makeStyles(theme => ({
         position: "fixed",
         right: 30,
         bottom: 20,
-    }
+    },
 
+    category: {
+        marginBottom: theme.spacing(4),
+    },
+    title: {
+        marginBottom: theme.spacing(2)
+    },
+    itemgrid: {
+        display: "flex",
+        alignItems: "stretch",
+        minHeight: "100%"
+    },
 }));
 
 
@@ -67,19 +77,20 @@ export default (props) => {
     const ctx = React.useContext(GlobalContext);
     const history = useHistory();
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
-    const {merchandise_id: merchandiseId} = props.match.params;
+    const merchandise_id = props.match.params.merchandise_id;
     const classes = useStyles();
-    const [categories, setCategories] = useState(data);
+    const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState();
     const [showFilterDialog, setShowFilterDialog] = useState(false);
     useEffect(() => {
-        Axios.get(`${BASE_URL}/public/category_wise/menu/${merchandiseId}/`,).then(response => {
+        Axios.get(`${BASE_URL}/public/category_wise_menu/${merchandise_id}/`,).then(response => {
+            console.log(response.data);
             setCategories(response.data.categories)
         }).catch(error => {
-            enqueueSnackbar("Faild to load Menu.", {variant: "error"});
-            setTimeout(history.goBack, 5)
+            enqueueSnackbar("Failed to load Menu.", {variant: "error"});
+            setTimeout(history.goBack, 1000)
         })
-    });
+    }, []);
 
     return (
         <div className={classes.root}>
@@ -96,19 +107,35 @@ export default (props) => {
 
                 <Grid container spacing={3} className={classes.main}>
                     <Grid item xs={12} md={9}>
-                        <CategoryList categories={categories}/>
+                        {
+                            categories.map(category => (
+                                <section key={category._id} id={category._id} className={classes.category}>
+                                    <Grid item xs={12}>
+                                        <Typography variant={"h5"} className={classes.title}
+                                                    color={"primary"}>  {category.name} </Typography>
+                                        <Grid container spacing={2} className={classes.itemgrid}>
+                                            {category.items.filter(z => z.available).map(item => (
+                                                <Grid item key={item._id} xs={12} md={4}>
+                                                    <ItemCard item={item} category_id={category._id} merchandise_id={merchandise_id} />
+                                                </Grid>
+                                            ))}
+                                        </Grid>
+                                    </Grid>
+                                </section>
+                            ))
+                        }
                     </Grid>
                     <Hidden smDown>
                         <Grid item xs={3}>
                             <Paper className={classes.categoryroot} elevation={0} square>
                                 <List subheader={<ListSubheader><b> Filter </b> </ListSubheader>}>
                                     {categories.map(category => (
-                                        <ListItem button component={"a"} key={category.id} href={`#${category.id}`}
-                                                  selected={category.id === selectedCategory}
-                                                  onClick={() => setSelectedCategory(category.id)}
+                                        <ListItem button component={"a"} key={category._id} href={`#${category._id}`}
+                                                  selected={category._id === selectedCategory}
+                                                  onClick={() => setSelectedCategory(category._id)}
                                         >
                                             <ListItemText> {category.name}</ListItemText>
-                                            <ListItemSecondaryAction> {category.count}</ListItemSecondaryAction>
+                                            <ListItemSecondaryAction> {category.items.length}</ListItemSecondaryAction>
                                         </ListItem>
                                     ))}
                                 </List>
@@ -127,10 +154,10 @@ export default (props) => {
                 <DialogTitle id="simple-dialog-title"> Filter </DialogTitle>
                 <List>
                     {categories.map(category => (
-                        <ListItem key={category.id} button component={"a"} href={`#${category.id}`}
+                        <ListItem key={category._id} button component={"a"} href={`#${category._id}`}
                                   onClick={() => setShowFilterDialog(false)}>
                             <ListItemText> {category.name}</ListItemText>
-                            <ListItemSecondaryAction> {category.count}</ListItemSecondaryAction>
+                            <ListItemSecondaryAction> {category.items.length}</ListItemSecondaryAction>
                         </ListItem>
                     ))}
                 </List>

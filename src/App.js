@@ -18,6 +18,8 @@ import OrderPage from "./pages/OrderPage";
 import AddressPage from "./pages/AddressPage";
 import EditAddressPage from "./pages/EditAddressPage";
 import OrderTypePage from "./pages/OrderTypePage";
+import OrderSummaryPage from "./pages/OrderSummaryPage";
+import NotFoundPage from "./pages/404Page"
 
 
 const App = (props) => {
@@ -38,10 +40,12 @@ const App = (props) => {
                                 <Route path="/cart" exact component={CartPage}/>
                                 <Route path="/profile" exact component={ProfilePage}/>
                                 <Route path="/orderHistory" exact component={OrderPage}/>
-                                <Route path="/menu:merchandiseId" component={MenuPage}/>
+                                <Route path="/menu/:merchandise_id" exact component={MenuPage}/>
                                 <Route path="/chooseAddress" exact component={AddressPage}/>
                                 <Route path="/editAddress" exact component={EditAddressPage} />
                                 <Route path="/selectOrderType" exact component={OrderTypePage} />
+                                <Route path="/checkout" exact component={OrderSummaryPage} />
+                                <Route component={NotFoundPage}/>
                             </Switch>
                         </div>
                     </Router>

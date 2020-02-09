@@ -80,6 +80,7 @@ export default function MenuAppBar(props) {
                                 <MenuItem component={Link} to={"/orderHistory"}> Manage Orders</MenuItem>
                                 <MenuItem component={Link} to={{pathname:"/chooseAddress", next:"/"}}> Manage Addresses</MenuItem>
                                 <MenuItem component={Link} to={"/contact"}> Contact Us </MenuItem>
+                                <MenuItem component={Link} to={"/logout"}> Logout</MenuItem>
                             </Menu>
                         </div>
                     ) : (

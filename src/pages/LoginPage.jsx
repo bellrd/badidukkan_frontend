@@ -115,21 +115,21 @@ export default function LoginPage(props) {
         })
             .then(function (response) {
                 ctx.dispatch({type: "LOGIN", payload: response.data.token});
-                enqueueSnackbar("Login successful", {variant: "successs"});
+                enqueueSnackbar("Login successful", {variant: "success"});
                 setTimeout(() => {
                     const nextPage = props.location.next || props.next || "/";
-                    history.push(nextPage)
+                    history.replace(nextPage)
                 })
             })
             .catch((error) => {
                 // just for you
-                enqueueSnackbar("Login Error", {variant: "error", key: "loginkeyerror"});
+                enqueueSnackbar("Login failed ", {variant: "error", key: "loginkeyerror"});
                 setDisableSubmit(false)
             });
     };
 
     // if already logged in redirect to / or next
-    if (ctx.state.token != null) {
+    if (ctx.state.accessToken != null) {
         let next = props.next || props.location.next || "/";
         return <Redirect to={next}> </Redirect>;
     }

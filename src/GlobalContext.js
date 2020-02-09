@@ -11,12 +11,12 @@ const isMobile = function () {
 };
 
 
+
 const initialState = {
     accessToken: localStorage.getItem('accessToken') ,
-    cart:JSON.parse("[]"),
-    //cart: JSON.parse(localStorage.getItem("cart") != undefined ? "[]" :localStorage.getItem("cart")),
+    cart:JSON.parse(localStorage.getItem("cart") == null ? "[]": localStorage.getItem("cart")),
     isMobile: isMobile(),
-    showCart: false,
+    merchandise_id:localStorage.getItem("merchandise_id")
 };
 
 const GlobalContext = React.createContext({initialState});

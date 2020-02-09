@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {useHistory} from "react-router-dom"
+import {Redirect,useHistory} from "react-router-dom"
 import {Button, Container, CssBaseline, makeStyles, Paper, Typography} from "@material-ui/core";
 import {KeyboardBackspaceRounded as Back} from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
@@ -65,19 +65,19 @@ export default (props) => {
             return
         }
 
-        if (props.location.address != null) {
+        if (props.location.address == null) {
             Axios.post(`${BASE_URL}/users/addresses/`, address, {headers: {Authorization: ctx.state.accessToken}}).then(response => {
                     enqueueSnackbar("Address saved");
-                    setTimeout(history.goBack, 500);
+                    history.replace({pathname:"/chooseAddress", hidden:props.location.next})
                 }
             ).catch(error => {
                     enqueueSnackbar("Failed to save address.", {variant: "error", key: "erroraddress"})
                 }
             )
         } else {
-            Axios.put(`${BASE_URL}/users/addresses/${address.id}/`, address, {headers: {Authorization: ctx.state.accessToken}}).then(response => {
+            Axios.put(`${BASE_URL}/users/addresses/${address._id}/`, address, {headers: {Authorization: ctx.state.accessToken}}).then(response => {
                     enqueueSnackbar("Address saved");
-                    setTimeout(history.goBack, 500);
+                    history.replace({pathname:"/chooseAddress", hidden:this.location.next})
                 }
             ).catch(error => {
                     enqueueSnackbar("Failed to save address.", {variant: "error", key: "erroraddress"})
@@ -85,7 +85,9 @@ export default (props) => {
             )
         }
     };
-
+    if (!ctx.state.accessToken){
+        return <Redirect to={{pathname:"/login", next:"/chooseAddress"}} />
+    }else
     return (
         <React.Fragment>
             <Container maxWidth={"sm"} className={classes.root}>

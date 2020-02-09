@@ -55,65 +55,29 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const merchandiseDemoList = [
-    {
-        id: "1",
-        name: "Step In Cafe",
-        rating: 4,
-        additionalDetail: "A good cafe for dating, known for hygiene"
-    },
-    {
-        id: "2",
-        name: "BBC",
-        rating: 5,
-        additionalDetail: "A good cafe for dating, known for hygiene"
-    },
-    {
-        id: "3",
-        name: "Famous Dum Biryani",
-        rating: 3,
-        additionalDetail: "A good cafe for dating, known for hygiene"
-    },
-    {
-        id: "4",
-        name: "Goli Vada Pav",
-        rating: 2.5,
-        additionalDetail: "A good cafe for dating, known for hygiene"
-    },
-    {
-        id: "5",
-        name: "Ad Brothers",
-        rating: 5,
-        additionalDetail: "A good cafe for dating, known for hygiene"
-    },
-    {
-        id: "6",
-        name: "Awadh Junction",
-        rating: 4.5,
-        additionalDetail: "A good cafe for dating, known for hygiene",
-        tag: "New"
-    },
-];
 
 export default (props) => {
     const history = useHistory();
-    const [merchandises, setMerchandises] = useState(merchandiseDemoList);
+    const [merchandises, setMerchandises] = useState([]);
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     useEffect(() => {
-        Axios.get(`${BASE_URL}/public/merchandises/`).then(response =>
-            setMerchandises(response.data)
+        Axios.get(`${BASE_URL}/public/merchandises/`).then(response => {
+                console.log(response);
+                setMerchandises(response.data)
+            }
         ).catch(error => {
             enqueueSnackbar("Loading Failed", {variant: "error", key: "hello"})
         })
     }, []);
     const classes = useStyles();
 
+
     return (
         <React.Fragment>
             {
                 merchandises.map(merchandise => (
-                    <Grid item key={merchandise.id} xs={12} sm={6} md={3} onClick={() => {
-                        history.push(`/menu/${merchandise.id}`)
+                    <Grid item key={merchandise._id} xs={12} sm={6} md={3} onClick={() => {
+                        history.push(`/menu/${merchandise._id}`)
                     }}>
                         <Card className={classes.card}>
 
@@ -134,7 +98,8 @@ export default (props) => {
                                 <Button size="small" color="primary">
                                     Menu
                                 </Button>
-                                <Rating value={merchandise.rating} precision={0.5} defaultValue={1} color={"secondary"}
+                                <Rating value={merchandise.rating} precision={0.5} defaultValue={1}
+                                        color={"secondary"}
                                         readOnly={true}/>
 
                             </CardActions>

@@ -70,7 +70,7 @@ export default function ForgotPasswordPage(props) {
 
     const handleInput = e => {
         if (e.target.name === "mobile") {
-            setMobile({mobile: e.target.value});
+            setMobile( e.target.value);
         }
     };
 
@@ -89,7 +89,8 @@ export default function ForgotPasswordPage(props) {
                 }, 1000)
             }
         ).catch(error => {
-                enqueueSnackbar(error.data.message, {variant: "error"})
+                enqueueSnackbar("Some error occurred.", {variant: "error"})
+                setDisableSubmit(false)
             }
         )
     };
