@@ -109,7 +109,7 @@ export default (props) => {
 
     if (!orders || orders.length === 0) {
         return (
-            <h1> No order found </h1>
+            <h1 style={{align:"center"}}> No order found </h1>
         )
     } else
         return (
@@ -122,7 +122,7 @@ export default (props) => {
                         <Typography variant={"h5"} align={"center"}> <b> Orders </b></Typography>
                     </div>
                     {orders.map((order, index) => (
-                        <Box m={4}>
+                        <Box m={1}>
                         <ExpansionPanel key={order.id} elevation={3}>
 
                             <ExpansionPanelSummary expandIcon={<ExpandMore/>}>
