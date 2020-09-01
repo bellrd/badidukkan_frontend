@@ -42,22 +42,10 @@ export default props => {
   const history = useHistory();
   const classes = useStyles();
 
-  useEffect(() => {
-    Axios.get(`${BASE_URL}/public/merchandises/${merchandise_id}/`)
-      .then(response => {
-        setServices(response.data.services);
-      })
-      .catch(error => {
-        if (merchandise_id)
-          enqueueSnackbar("Failed in loading options", { variant: "error" });
-        history.replace("/cart");
-      });
-  }, []);
-
-  const [services, setServices] = useState([]);
   if (!props.location.merchandise_id) {
     return <Redirect to={"/cart"} />;
   }
+
   if (ctx.state.accessToken == null) {
     return <Redirect to={{ pathname: "/login", next: "/cart" }} />;
   }
@@ -85,30 +73,37 @@ export default props => {
               </ListSubheader>
             }
           >
-            {services.map(service => (
-              <ListItem
-                button
-                onClick={() => {
-                  ctx.dispatch({
-                    type: "MERCHANDISE_SERVICE_SET",
-                    payload: service
-                  });
-                  if (service.address_required) {
-                    history.replace({
-                      pathname: "/chooseAddress",
-                      from: "/orderType"
-                    });
-                  } else {
-                    history.replace("/checkout");
-                  }
-                }}
-              >
-                <ListItemText>
-                  {" "}
-                  <b> {service.name.toUpperCase()} </b>{" "}
-                </ListItemText>
-              </ListItem>
-            ))}
+            <ListItem
+              button onClick={() => {
+                ctx.dispatch({
+                  type: "MERCHANDISE_SERVICE_SET",
+                  payload: "HOME_DELIVERY"
+                });
+                history.replace({
+                  pathname: "/chooseAddress",
+                  from: "/orderType"
+                });
+              }}
+            >
+              <ListItemText>
+                <b>Home Delivery</b>
+              </ListItemText>
+            </ListItem>
+
+            <ListItem
+              button onClick={() => {
+                ctx.dispatch({
+                  type: "MERCHANDISE_SERVICE_SET",
+                  payload: "SELF_PICKUP"
+                });
+                history.replace("/checkout");
+              }}
+            >
+              <ListItemText>
+                <b>Self Pickup</b>
+              </ListItemText>
+            </ListItem>
+
           </List>
         </Paper>
       </Container>

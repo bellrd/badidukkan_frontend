@@ -60,8 +60,8 @@ export default props => {
   const classes = useStyles();
 
   useEffect(() => {
-    Axios.get(`${BASE_URL}/users/profile/`, {
-      headers: { Authorization: ctx.state.accessToken }
+    Axios.get(`${BASE_URL}/profile`, {
+      headers: { Authorization: `Token ${ctx.state.accessToken}` }
     })
       .then(response => {
         setProfile(response.data);
@@ -97,13 +97,13 @@ export default props => {
       });
       return;
     }
-    Axios.put(
-      `${BASE_URL}/users/change_password/`,
+    Axios.post(
+      `${BASE_URL}/set-password`,
       {
-        mobile: profile.mobile,
-        password: password2
+        password1: password1,
+        password2: password2
       },
-      { headers: { Authorization: ctx.state.accessToken } }
+      { headers: { Authorization: `Token ${ctx.state.accessToken}` } }
     )
       .then(response => {
         enqueueSnackbar("Password Updated", { variant: "success" });
@@ -113,20 +113,7 @@ export default props => {
       });
   };
 
-  const updateProfile = () => {
-    Axios.put(
-      `${BASE_URL}/users/profile/`,
-      { ...profile },
-      { headers: { Authorization: ctx.state.accessToken } }
-    )
-      .then(response => {
-        console.log({ profile });
-        enqueueSnackbar("Profile Saved", { variant: "success" });
-      })
-      .catch(error => {
-        enqueueSnackbar("Failed to update Profile", { variant: "error" });
-      });
-  };
+ 
   if (!ctx.state.accessToken) {
     return <Redirect to={{ pathname: "/login", next: "/profile" }} />;
   } else
@@ -141,7 +128,6 @@ export default props => {
               <Typography
                 variant={"h5"}
                 align={"center"}
-                onClick={updateProfile}
               >
                 <b> Save </b>
               </Typography>
@@ -152,63 +138,28 @@ export default props => {
                 subheader={
                   <ListSubheader disableSticky>
                     {" "}
-                    {profile.full_name}
+                    {profile.name}
                   </ListSubheader>
                 }
               >
                 <ListItem>
                   <ListItemText> Email: </ListItemText>
-                  <ListItemSecondaryAction
-                    onClick={() => {
-                      const newEmail = prompt("Enter Email");
-                      enqueueSnackbar("Email Added", { variant: "success" });
-                      setProfile({ ...profile, email: newEmail });
-                    }}
-                  >
+                  <ListItemSecondaryAction>
                     {profile.email || "Not available."}
                   </ListItemSecondaryAction>
                 </ListItem>
                 <ListItem>
-                  <ListItemText> Dob </ListItemText>
-                  <ListItemSecondaryAction
-                    onClick={() => {
-                      enqueueSnackbar("Working on it.", { variant: "info" });
-                    }}
-                  >
-                    {profile.dob || "Not provided."}
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <ListItem>
-                  <ListItemText> Notification </ListItemText>
+                  <ListItemText> ID: </ListItemText>
                   <ListItemSecondaryAction>
-                    <Switch
-                      checked={profile.notification}
-                      onChange={() => {
-                        setProfile({
-                          ...profile,
-                          notification: !profile.notification
-                        });
-                      }}
-                    />
+                    {profile.user || "log in first"}
                   </ListItemSecondaryAction>
                 </ListItem>
 
+
                 <ListItem>
-                  <ListItemText> Email Invoice </ListItemText>
+                  <ListItemText> Dob </ListItemText>
                   <ListItemSecondaryAction>
-                    {profile.email ? (
-                      <Switch
-                        checked={profile.invoiceUpdate}
-                        onChange={() => {
-                          setProfile({
-                            ...profile,
-                            invoiceUpdate: !profile.invoiceUpdate
-                          });
-                        }}
-                      />
-                    ) : (
-                      "Add email"
-                    )}
+                    {profile.dob || "Not provided."}
                   </ListItemSecondaryAction>
                 </ListItem>
               </List>

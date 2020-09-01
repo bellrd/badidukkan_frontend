@@ -71,7 +71,7 @@ export default (props) => {
     const [registerData, setRegisterData] = useState({
         first_name: "",
         last_name: "",
-        mobile: "",
+        mobile_number: "",
         password: "",
     });
     const [firstNameFieldError, setFirstNameFieldError] = useState(false);
@@ -99,7 +99,7 @@ export default (props) => {
         } else {
             setFirstNameFieldError(false);
         }
-        if (!registerData.mobile.match(/^[6-9][\d]{9}$/)) {
+        if (!registerData.mobile_number.match(/^[6-9][\d]{9}$/)) {
             setMobileFieldError(true);
             return; //required
         } else {
@@ -113,9 +113,9 @@ export default (props) => {
         }
 
         setDisableSubmit(true);
-        Axios.post(`${BASE_URL}/users/register/`, {
+        Axios.post(`${BASE_URL}/create-account`, {
             ...registerData,
-            full_name: registerData.first_name + " " + registerData.last_name
+            name: registerData.first_name + " " + registerData.last_name
         })
             .then(function (response) {
                 setStep(2);
@@ -129,7 +129,7 @@ export default (props) => {
 
     if (step === 1) {
         // if already logged in redirect to / or next
-        if (ctx.state.token != null) {
+        if (ctx.state.accessToken != null || ctx.state.accessToken === undefined) {
             return <Redirect to={{pathname:"/logout", next:"/register"}}> </Redirect>;
         } else
         return (
@@ -181,7 +181,7 @@ export default (props) => {
                                     fullWidth
                                     id="mobile"
                                     label="Mobile Number"
-                                    name="mobile"
+                                    name="mobile_number"
                                     autoComplete="mobile"
                                     onChange={handleInput}
                                 />
@@ -252,7 +252,7 @@ export default (props) => {
             <Redirect
                 to={{
                     pathname: "/verify",
-                    mobile: registerData.mobile,
+                    mobile_number: registerData.mobile_number,
                     next:"/"
                 }}
             ></Redirect>

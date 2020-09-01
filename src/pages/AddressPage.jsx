@@ -59,11 +59,12 @@ export default (props) => {
     const classes = useStyles();
     const from = props.location.from
     useEffect(() => {
-        Axios.get(`${BASE_URL}/users/addresses/`, {headers: {Authorization: ctx.state.accessToken}}).then(response => {
+        Axios.get(`${BASE_URL}/address`, {headers: {Authorization: `Token ${ctx.state.accessToken}`}}).then(response => {
             console.log(response)
             setAddresses(response.data)
         }).catch(error => {
-            enqueueSnackbar("Unable to retrieve address.", {variant: "error"})
+            enqueueSnackbar("Unable to retrieve address.", {variant: "error"});
+            console.log({error})
         })
     }, []);
     if(!ctx.state.accessToken){

@@ -57,9 +57,8 @@ export default props => {
   const [merchandises, setMerchandises] = useState([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   useEffect(() => {
-    Axios.get(`${BASE_URL}/public/merchandises/`)
+    Axios.get(`${BASE_URL}/merchandises`)
       .then(response => {
-        console.log(response);
         setMerchandises(response.data);
       })
       .catch(error => {
@@ -73,13 +72,13 @@ export default props => {
       {merchandises.map(merchandise => (
         <Grid
           item
-          key={merchandise._id}
+          key={merchandise.id}
           xs={12}
           sm={6}
           md={3}
           onClick={() => {
             history.push({
-              pathname: `/menu/${merchandise._id}`,
+              pathname: `/menu/${merchandise.id}`,
               merchandise_name: merchandise.name
             });
           }}
@@ -88,7 +87,7 @@ export default props => {
             <CardMedia
               className={classes.cardMedia}
               image={
-                merchandise.photoUrl || "https://source.unsplash.com/random"
+                merchandise.featured_photo|| "https://source.unsplash.com/random"
               }
               title={merchandise.name}
             />
@@ -97,7 +96,7 @@ export default props => {
                 {merchandise.name}
               </Typography>
               <Typography variant={"subtitle1"}>
-                {merchandise.additionalDetail}
+                {merchandise.additional_detail}
               </Typography>
             </CardContent>
             <CardActions className={classes.cardAction}>

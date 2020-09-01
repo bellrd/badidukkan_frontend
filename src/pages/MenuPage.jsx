@@ -81,9 +81,8 @@ export default props => {
   const [selectedCategory, setSelectedCategory] = useState();
   const [showFilterDialog, setShowFilterDialog] = useState(false);
   useEffect(() => {
-    Axios.get(`${BASE_URL}/public/category_wise_menu/${merchandise_id}/`)
+    Axios.get(`${BASE_URL}/merchandises/${merchandise_id}`)
       .then(response => {
-        console.log(response.data);
         setCategories(response.data.categories);
       })
       .catch(error => {
@@ -120,8 +119,8 @@ export default props => {
           <Grid item xs={12} md={9}>
             {categories.map(category => (
               <section
-                key={category._id}
-                id={category._id}
+                key={category.id}
+                id={category.id}
                 className={classes.category}
               >
                 <Grid item xs={12}>
@@ -135,12 +134,12 @@ export default props => {
                   </Typography>
                   <Grid container spacing={2} className={classes.itemgrid}>
                     {category.items
-                      .filter(z => z.available)
+                      .filter(z => z.is_available)
                       .map(item => (
-                        <Grid item key={item._id} xs={12} md={4}>
+                        <Grid item key={item.id} xs={12} md={4}>
                           <ItemCard
                             item={item}
-                            category_id={category._id}
+                            category_id={category.id}
                             merchandise_id={merchandise_id}
                           />
                         </Grid>
@@ -164,10 +163,10 @@ export default props => {
                     <ListItem
                       button
                       component={"a"}
-                      key={category._id}
-                      href={`#${category._id}`}
-                      selected={category._id === selectedCategory}
-                      onClick={() => setSelectedCategory(category._id)}
+                      key={category.id}
+                      href={`#${category.id}`}
+                      selected={category.id === selectedCategory}
+                      onClick={() => setSelectedCategory(category.id)}
                     >
                       <ListItemText> {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}</ListItemText>
                       <ListItemSecondaryAction>
@@ -203,10 +202,10 @@ export default props => {
         <List>
           {categories.map(category => (
             <ListItem
-              key={category._id}
+              key={category.id}
               button
               component={"a"}
-              href={`#${category._id}`}
+              href={`#${category.id}`}
               onClick={() => setShowFilterDialog(false)}
             >
               <ListItemText> {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}</ListItemText>

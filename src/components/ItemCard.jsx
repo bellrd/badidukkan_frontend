@@ -64,7 +64,7 @@ export default (props) => {
                         {item.name}
                     </Typography>
                     <Typography variant="subtitle1" color="textSecondary">
-                        {item.additionalDetail}
+                        {item.additional_detail}
                     </Typography>
                 </CardContent>
                 <div className={classes.controls}>
@@ -78,7 +78,7 @@ export default (props) => {
                         <Button variant={"contained"} color={"primary"}
                                 disableElevation={true}>  {
                             ctx.state.cart.filter(
-                                temp => temp._id === item._id)
+                                temp => temp.id === item.id)
                                 .reduce(
                                     (a, b) => (
                                         {quantity: a.quantity + b.quantity}
@@ -95,7 +95,7 @@ export default (props) => {
             </div>
             <CardMedia
                 className={classes.cover}
-                image={item.photoUrl || "https://source.unsplash.com/random"}
+                image={item.item_photo|| "https://source.unsplash.com/random"}
                 title="Item photo"
             />
 
@@ -104,21 +104,21 @@ export default (props) => {
                 <DialogTitle> Modify Size </DialogTitle>
                 <DialogContent>
                     <List>
-                        {item.sizes.map((size, index) => {
-                            const itemIndex = ctx.state.cart.findIndex(cartitem => cartitem._id === item._id && cartitem.size === size.name);
+                        {item.prices.map((price, index) => {
+                            const itemIndex = ctx.state.cart.findIndex(cartitem => cartitem.id === item.id && cartitem.size === price.size);
                             return <ListItem key={index}>
-                                <ListItemText> {size.name} @ <b>{size.price}</b></ListItemText>
+                                <ListItemText> {price.size} @ <b>{price.mrp}</b></ListItemText>
                                 <ListItemSecondaryAction>
                                     <ButtonGroup size={"small"} color={"secondary"} variant={"outlined"}>
                                         <IconButton onClick={() => {
                                             ctx.dispatch({
                                                 type: "REMOVE_ONE_ITEM",
                                                 payload: {
-                                                    _id: item._id,
+                                                    id: item.id,
                                                     name: item.name,
-                                                    size: size.name,
+                                                    size: price.size,
                                                     category_id: category_id,
-                                                    price: size.price,
+                                                    mrp : price.mrp,
                                                     merchandise_id: merchandise_id
                                                 }
                                             })
@@ -135,10 +135,10 @@ export default (props) => {
                                             ctx.dispatch({
                                                 type: "ADD_ONE_ITEM",
                                                 payload: {
-                                                    _id: item._id,
+                                                    id: item.id,
                                                     name: item.name,
-                                                    size: size.name,
-                                                    price: size.price,
+                                                    size: price.size,
+                                                    mrp : price.mrp,
                                                     category_id: category_id,
                                                     merchandise_id: merchandise_id,
                                                 }

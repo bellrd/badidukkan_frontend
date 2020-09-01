@@ -81,28 +81,26 @@ export default (props) => {
     const classes = useStyles();
 
     useEffect(() => {
-        if (!ctx.state.service) return;
+       // if (!ctx.state.order_type) return;
         const data = {
             cart: ctx.state.cart,
             merchandise_id: ctx.state.merchandise_id,
             address: ctx.state.address,
-            address_required: ctx.state.service.address_required,
-            service_name: ctx.state.service.name,
-            delivery_required: ctx.state.service.delivery_required,
+            order_type: ctx.state.order_type,
         };
         console.log({data});
-        Axios.post(`${BASE_URL}/users/make_order/`, data, {headers: {Authorization: ctx.state.accessToken}}).then(
-            response => {
-                console.log(response.data);
-                setOrder(response.data)
-            }
-        ).catch(error => {
-            try {
-                enqueueSnackbar(error.response.data.message, {variant: "error"})
-            } catch (e) {
-                enqueueSnackbar("Something went wrong.", {variant: "error"})
-            }
-        })
+        // Axios.post(`${BASE_URL}/make_order/`, data, {headers: {Authorization: ctx.state.accessToken}}).then(
+        //     response => {
+        //         console.log(response.data);
+        //         setOrder(response.data)
+        //     }
+        // ).catch(error => {
+        //     try {
+        //         enqueueSnackbar(error.response.data.message, {variant: "error"})
+        //     } catch (e) {
+        //         enqueueSnackbar("Something went wrong.", {variant: "error"})
+        //     }
+        // })
     }, []);
 
 
@@ -113,7 +111,7 @@ export default (props) => {
         }
 
         if (payment_method === 'COD') {
-            Axios.post(`${BASE_URL}/users/place_order_cod/`, {
+            Axios.post(`${BASE_URL}/place_order_cod/`, {
                 id: order._id,
                 payment_method: 'COD'
             }, {headers: {Authorization: ctx.state.accessToken}}).then(
@@ -130,7 +128,7 @@ export default (props) => {
                 }
             )
         } else if (payment_method === 'ONLINE') {
-            Axios.post(`${BASE_URL}/users/place_order_online/`, {
+            Axios.post(`${BASE_URL}/place_order_online/`, {
                 id: order._id,
                 payment_method: "ONLINE"
             }, {headers: {Authorization: ctx.state.accessToken}}).then(

@@ -3,11 +3,10 @@ export const address_selected = (state, data) => {
 };
 
 export const merchandise_service_set = (state, data) => {
-    return {...state, service: {...data}}
+    return {...state, order_type: data}
 };
 
 export const order_placed = (state, data) => {
     localStorage.removeItem("cart")
-    localStorage.removeItem("merchandise_id")
     return {...state, cart: [], merchandise_id: null, address: null, service:null}
 };

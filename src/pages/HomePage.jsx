@@ -79,7 +79,7 @@ const HomePage = props => {
               <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button variant="contained" color="primary">
-                    <a style={{color:"#fff"}} href="https://drive.google.com/file/d/13DdkCKX0v2yR-04V-ClNhOvD3Cq2R5Ma/view?usp=drivesdk">
+                    <a style={{color:"#fff"}} href="https://drive.google.com/file/d/13DdkC0v2yR-04V-ClNhOvCq2R5Ma/view?usp=drivesdk">
                       Download Scanner
                     </a>
                   </Button>

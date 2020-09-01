@@ -9,7 +9,7 @@ export const addOneItem = (state, data) => {
         }
     }
     const newCart = [...state.cart];
-    let index = state.cart.findIndex(item => (item._id === data._id && item.size === data.size));
+    let index = state.cart.findIndex(item => (item.id === data.id && item.size === data.size));
     if (index !== -1) {
         // update price if changed
         newCart[index].price = data.price;
@@ -17,11 +17,11 @@ export const addOneItem = (state, data) => {
     } else {
         const item = {
             key: new Date().getTime().toString(),
-            _id: data._id,
+            id: data.id,
             name: data.name,
             size: data.size,
             quantity: 1,
-            price: data.price,
+            mrp : data.mrp,
             category_id: data.category_id,
             merchandise_id: data.merchandise_id,
         };
@@ -35,7 +35,7 @@ export const addOneItem = (state, data) => {
 
 
 export const removeOneItem = (state, data) => {
-    const index = state.cart.findIndex(item => (item._id === data._id && item.size === data.size));
+    const index = state.cart.findIndex(item => (item.id === data.id && item.size === data.size));
     console.log("removing one item ");
 
     // no such item in cart
@@ -54,7 +54,7 @@ export const removeOneItem = (state, data) => {
 };
 
 export const deleteItem = (state, data) => {
-    let index = state.cart.findIndex(item => (item._id === data._id && item.size === data.size));
+    let index = state.cart.findIndex(item => (item.id === data.id && item.size === data.size));
     const newCart = [...state.cart];
     if (index !== -1) {
         newCart.splice(index, 1)

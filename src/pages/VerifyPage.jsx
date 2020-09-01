@@ -66,15 +66,15 @@ export default function VerifyPage(props) {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const classes = useStyles();
     const [verifyData, setVerifyData] = useState(
-        {mobile: "mobile" in props.location ? props.location.mobile : "", otp: ""}
+        {mobile_number: "mobile_number" in props.location ? props.location.mobile_number : "", otp: ""}
     );
     const [mobileFieldError, setMobileFieldError] = useState(false);
     const [otpFieldError, setOtpFieldError] = useState(false);
     const [disableSubmit, setDisableSubmit] = useState(false);
 
     const handleInput = e => {
-        if (e.target.name === "mobile") {
-            setVerifyData({...verifyData, mobile: e.target.value});
+        if (e.target.name === "mobile_number") {
+            setVerifyData({...verifyData, mobile_number: e.target.value});
         } else if (e.target.name === "otp") {
             setVerifyData({...verifyData, otp: e.target.value});
         } else {
@@ -83,7 +83,7 @@ export default function VerifyPage(props) {
     };
 
     const handleSubmit = () => {
-        if (!verifyData.mobile.match(/^[6-9]{1}[\d]{9}$/)) {
+        if (!verifyData.mobile_number.match(/^[6-9]{1}[\d]{9}$/)) {
             setMobileFieldError(true);
             return; //required
         } else {
@@ -97,7 +97,7 @@ export default function VerifyPage(props) {
         }
 
         setDisableSubmit(true);
-        Axios.post(`${BASE_URL}/users/verify/`, verifyData).then(response => {
+        Axios.post(`${BASE_URL}/verify`, verifyData).then(response => {
                 ctx.dispatch({type: "LOGIN", payload: response.data.token});
                 enqueueSnackbar("Success", {variant: "success"});
                 const nextPage = props.location.next || props.next || "/profile/#updatePasword";
@@ -139,13 +139,13 @@ export default function VerifyPage(props) {
                         fullWidth
                         id="mobile"
                         label="Mobile number"
-                        name="mobile"
+                        name="mobile_number"
                         type="tel"
                         autoComplete="mobile"
                         autoFocus
                         onChange={handleInput}
-                        value={props.location.mobile}
-                        disabled={Boolean(props.location.mobile)}
+                        value={props.location.mobile_number}
+                        disabled={Boolean(props.location.mobile_number)}
                     />
                     <TextField
                         error={otpFieldError}

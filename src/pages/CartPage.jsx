@@ -127,7 +127,7 @@ const CartItem = (props) => {
                     <Delete color={"secondary"}/>
                 </IconButton>
                 <Typography>
-                    {cart_item.price * cart_item.quantity}
+                    {cart_item.mrp * cart_item.quantity}
                 </Typography>
             </div>
         </Box>

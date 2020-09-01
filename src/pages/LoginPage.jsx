@@ -69,7 +69,7 @@ export default function LoginPage(props) {
     const history = useHistory();
     const classes = useStyles();
     const [showPassword, toggleShowPassword] = useState(false);
-    const [loginData, setLoginData] = useState({mobile: "", password: ""});
+    const [loginData, setLoginData] = useState({mobile_number: "", password: ""});
     const [mobileFieldError, setMobileFieldError] = useState(false);
     const [passwordFieldError, setPasswordFieldError] = useState(false);
     const [disableSubmit, setDisableSubmit] = useState(false);
@@ -84,8 +84,8 @@ export default function LoginPage(props) {
     };
 
     const handleInput = e => {
-        if (e.target.name === "mobile") {
-            setLoginData({...loginData, mobile: e.target.value});
+        if (e.target.name === "mobile_number") {
+            setLoginData({...loginData, mobile_number: e.target.value});
         } else if (e.target.name === "password") {
             setLoginData({...loginData, password: e.target.value});
         } else {
@@ -94,7 +94,7 @@ export default function LoginPage(props) {
     };
 
     const handleSubmit = () => {
-        if (!loginData.mobile.match(/^[6-9]{1}[\d]{9}$/)) {
+        if (!loginData.mobile_number.match(/^[6-9]{1}[\d]{9}$/)) {
             setMobileFieldError(true);
             return; //required
         } else {
@@ -109,8 +109,8 @@ export default function LoginPage(props) {
 
         setDisableSubmit(true);
 
-        Axios.post(`${BASE_URL}/users/login/`, {
-            mobile: loginData.mobile,
+        Axios.post(`${BASE_URL}/get-access-token`, {
+            username: loginData.mobile_number,
             password: loginData.password
         })
             .then(function (response) {
@@ -154,7 +154,7 @@ export default function LoginPage(props) {
                         fullWidth
                         id="mobile"
                         label="Mobile number"
-                        name="mobile"
+                        name="mobile_number"
                         type="tel"
                         autoComplete="mobile"
                         autoFocus

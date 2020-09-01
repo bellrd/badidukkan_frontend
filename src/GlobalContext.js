@@ -13,10 +13,8 @@ const isMobile = function () {
 
 
 const initialState = {
-    accessToken: localStorage.getItem('accessToken') ,
-    cart:JSON.parse(localStorage.getItem("cart") == null ? "[]": localStorage.getItem("cart")),
-    isMobile: isMobile(),
-    merchandise_id:localStorage.getItem("merchandise_id")
+    accessToken: localStorage.getItem('AccessToken') ,
+    cart: [],
 };
 
 const GlobalContext = React.createContext({initialState});

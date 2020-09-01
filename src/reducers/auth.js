@@ -6,11 +6,11 @@
 
 */
 export const login = (state, data) => {
-    localStorage.setItem("accessToken", data);
+    localStorage.setItem("AccessToken", data);
     return { ...state, accessToken: data };
 };
 export const logout = (state, data) => {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("AccessToken");
     localStorage.removeItem("profile")
     localStorage.removeItem("cart")
     return { ...state, accessToken: null };
